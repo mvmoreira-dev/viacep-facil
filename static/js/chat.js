@@ -47,4 +47,4 @@ form.addEventListener("submit", (event) => {
 });
 
 // Initial greeting shown when the page loads.
-addMessage("Olá, Bem-vindo ao ViaCep Fácil! Me envie um CEP (ex: 01310-100) que eu busco o endereço pra você", "bot");
+addMessage("Olá, Bem-vindo ao ViaCep Fácil! Me envie um CEP (ex: 70150-900) que eu busco o endereço pra você", "bot");
