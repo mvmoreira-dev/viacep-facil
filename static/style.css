@@ -1,0 +1,134 @@
+:root {
+	--bg: #e4e8ec;
+	--painel: #f6f7f9;
+	--borda: #d7dce1;
+	--texto: #1f2733;
+	--texto-fraco: #6b7280;
+	--bolha-bot: #eceef1;
+	--bolha-user: #16548D;
+	--acento: #16548D;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--bg);
+	color: var(--texto);
+}
+
+.header-icon {
+	width: 40px;
+	height: 40px;
+	flex-shrink: 0;
+}
+
+.chat-header-title {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.chat-header-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.chat {
+	width: 100%;
+	max-width: 520px;
+	height: 90vh;
+	max-height: 640px;
+	display: flex;
+	flex-direction: column;
+	background: var(--painel);
+	border: 1px solid var(--borda);
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.chat-header {
+	padding: 14px 16px;
+	border-bottom: 1px solid var(--borda);
+}
+
+.chat-header h1 {
+	margin: 0;
+	font-size: 1.4rem;
+	color: var(--acento);
+}
+
+.chat-header p {
+	margin: 4px 0 0;
+	font-size: 0.8rem;
+	color: var(--texto-fraco);
+}
+
+.chat-messages {
+	flex: 1;
+	padding: 16px;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.msg {
+	max-width: 80%;
+	padding: 8px 12px;
+	border-radius: 6px;
+	font-size: 0.85rem;
+	line-height: 1.4;
+	white-space: pre-line;
+}
+
+.msg.bot {
+	align-self: flex-start;
+	background: var(--bolha-bot);
+	border: 1px solid var(--borda);
+}
+
+.msg.user {
+	align-self: flex-end;
+	background: var(--bolha-user);
+	color: #f4f7fa;
+}
+
+.chat-form {
+	display: flex;
+	border-top: 1px solid var(--borda);
+}
+
+.chat-form input {
+	flex: 1;
+	padding: 12px;
+	background: var(--bg);
+	border: none;
+	color: var(--texto);
+	font-family: inherit;
+	font-size: 0.85rem;
+}
+
+.chat-form input:focus {
+	outline: none;
+}
+
+.chat-form button {
+	padding: 0 18px;
+	background: var(--acento);
+	border: none;
+	color: #f4f7fa;
+	font-family: inherit;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.chat-form button:hover {
+	filter: brightness(1.1);
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ViaCEP Fácil</title>
+
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+</head>
+
+
+<body>
+	<main class="chat">
+		<header class="chat-header">
+			<div class="chat-header-title">
+				<img src="{{ url_for('static', filename='favicon.png') }}" alt="" class="header-icon">
+				<div class="chat-header-text">
+					<h1>ViaCEP Fácil</h1>
+					<p>Envie um CEP e eu busco o endereço pra você</p>
+				</div>
+			</div>
+		</header>
+
+		<div id="messages" class="chat-messages"></div>
+
+		<form id="chat-form" class="chat-form">
+			<input
+				id="message-input"
+				type="text"
+				placeholder="Digite um CEP, ex: 01310-100"
+				autocomplete="off"
+				required
+			>
+			<button type="submit">Enviar</button>
+		</form>
+	</main>
+
+	<script src="{{ url_for('static', filename='chat.js') }}"></script>
+</body>
+</html>
