@@ -24,7 +24,7 @@ function buildGrid() {
 			dots.push({
 				baseX: i * SPACING,
 				baseY: j * SPACING,
-				alpha: 0.20 + Math.random() * 0.14
+				alpha: 0.35 + Math.random() * 0.14
 			});
 		}
 	}
