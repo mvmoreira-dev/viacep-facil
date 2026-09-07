@@ -40,7 +40,7 @@ A aplicação sobe em `http://127.0.0.1:5000/` (modo debug).
 Digite no chat:
 
 ```
-01310-100
+70150-900
 ```
 
 E o bot responde com rua, bairro, cidade e estado correspondentes.
