@@ -25,12 +25,14 @@ function formatReply(data) {
         ).join("\n\n");
     }
 
+    const info = data.raw || {};
+
     // Search for CEP
     return (
-        `CEP: ${data.cep}\n` +
-        `Rua: ${data.street || "-"}\n` +
-        `Bairro: ${data.neighborhood || "-"}\n` +
-        `Cidade: ${data.city || "-"} - ${data.state || "-"}`
+        `CEP: ${info.cep || "-"}\n` +
+        `Rua: ${info.logradouro || "-"}\n` +
+        `Bairro: ${info.bairro || "-"}\n` +
+        `Cidade: ${info.localidade || "-"} - ${info.uf || "-"}`
     );
 }
 
