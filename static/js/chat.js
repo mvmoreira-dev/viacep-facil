@@ -11,15 +11,27 @@ function addMessage(text, author) {
 }
 
 function formatReply(data) {
-	if (data.type === "error") {
-		return data.reply;
-	}
-	return (
-		`CEP: ${data.cep}\n` +
-		`Rua: ${data.street || "-"}\n` +
-		`Bairro: ${data.neighborhood || "-"}\n` +
-		`Cidade: ${data.city || "-"} - ${data.state || "-"}`
-	);
+    if (data.type === "error") {
+        return data.reply;
+    }
+
+    // Search for address
+    if (data.results) {
+        return data.results.map(item =>
+            `CEP: ${item.cep}\n` +
+            `Rua: ${item.logradouro || "-"}\n` +
+            `Bairro: ${item.bairro || "-"}\n` +
+            `Cidade: ${item.localidade || "-"} - ${item.uf || "-"}`
+        ).join("\n\n");
+    }
+
+    // Search for CEP
+    return (
+        `CEP: ${data.cep}\n` +
+        `Rua: ${data.street || "-"}\n` +
+        `Bairro: ${data.neighborhood || "-"}\n` +
+        `Cidade: ${data.city || "-"} - ${data.state || "-"}`
+    );
 }
 
 async function sendMessage(text) {
@@ -47,4 +59,4 @@ form.addEventListener("submit", (event) => {
 });
 
 // Initial greeting shown when the page loads.
-addMessage("Olá, Bem-vindo ao ViaCEP Fácil! Me envie um CEP (ex: 70150-900) que eu busco o endereço pra você", "bot");
+addMessage("Olá, Bem-vindo ao ViaCEP Fácil! Envie um CEP (ex: 70150-900) ou um endereço especificando, na seguinte ordem: Estado, Cidade e Rua, que eu busco o endereço pra você.", "bot");

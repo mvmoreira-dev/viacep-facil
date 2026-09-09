@@ -1,9 +1,11 @@
 import re
 import requests
+from urllib.parse import quote
 from main import app
 from flask import render_template, request, jsonify
 
 VIACEP_URL = "https://viacep.com.br/ws/{cep}/json/"
+VIACEP_ALT_URL = "https://viacep.com.br/ws/{state}/{city}/{street}/json/"
 
 
 def extract_zip_code(text):
@@ -13,6 +15,16 @@ def extract_zip_code(text):
 		return digits
 	return None
 
+def search_by_address(state, city, street):
+	url = VIACEP_ALT_URL.format(
+		state=quote(state),
+		city=quote(city),
+		street=quote(street)
+	)
+
+	resp = requests.get(url, timeout=5)
+	resp.raise_for_status()
+	return resp.json()
 
 # Flask routes
 @app.route("/")
@@ -22,44 +34,66 @@ def homepage():
 
 @app.route("/api/message", methods=["POST"])
 def message():
-	# Expects JSON like {"message": "01310-100"} from the front-end
-	data = request.get_json(silent=True) or {}
-	text = data.get("message", "")
+    data = request.get_json(silent=True) or {}
+    text = data.get("message", "").strip()
 
-	cep = extract_zip_code(text)
-	if not cep:
-		# No valid 8-digit CEP found in the user's message
-		return jsonify({
-			"type": "error",
-			"reply": "Não encontrei um CEP válido na sua mensagem. "
-					 "Envie um CEP com 8 dígitos, ex: 01310-100."
-		})
+    # First try: CEP
+    cep = extract_zip_code(text)
 
-	try:
-		# Query the ViaCEP API for the given CEP
-		resp = requests.get(VIACEP_URL.format(cep=cep), timeout=5)
-		resp.raise_for_status()
-		info = resp.json()
-	except requests.RequestException:
-		# Network error
-		return jsonify({
-			"type": "error",
-			"reply": "Não consegui falar com o ViaCEP agora. Tente novamente em instantes."
-		})
+    if cep:
+        try:
+            resp = requests.get(VIACEP_URL.format(cep=cep), timeout=5)
+            resp.raise_for_status()
+            info = resp.json()
 
-	if info.get("erro"):
-		# ViaCEP responds with {"erro": true} for a well-formed but nonexistent CEP
-		return jsonify({
-			"type": "error",
-			"reply": f"CEP {cep} não foi encontrado."
-		})
+            if info.get("erro"):
+                return jsonify({
+                    "type": "error",
+                    "reply": f"CEP {cep} não encontrado."
+                })
 
-	return jsonify({
-		"type": "success",
-		"cep": info.get("cep"),
-		"street": info.get("logradouro"),
-		"neighborhood": info.get("bairro"),
-		"city": info.get("localidade"),
-		"state": info.get("uf"),
-		"raw": info
-	})
+            return jsonify({
+                "type": "success",
+                "raw": info
+            })
+
+        except requests.RequestException:
+            return jsonify({
+                "type": "error",
+                "reply": "Erro ao consultar o ViaCEP."
+            })
+
+    # Second try: UF City Street
+    parts = [p.strip() for p in text.split(",")]
+
+    if len(parts) != 3:
+        return jsonify({
+            "type": "error",
+            "reply": (
+                "Envie um CEP ou no formato:\n"
+                "UF, Cidade, Logradouro\n"
+                "Exemplo:\n"
+                "SP, São Paulo, Avenida Paulista"
+            )
+        })
+
+    state, city, street = parts
+
+    try:
+        results = search_by_address(state, city, street)
+    except requests.RequestException:
+        return jsonify({
+            "type": "error",
+            "reply": "Erro ao consultar o ViaCEP."
+        })
+
+    if not results:
+        return jsonify({
+            "type": "error",
+            "reply": "Nenhum endereço encontrado."
+        })
+
+    return jsonify({
+        "type": "success",
+        "results": results
+    })
