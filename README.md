@@ -43,4 +43,4 @@ Digite no chat:
 70150-900
 ```
 
-E o bot responde com rua, bairro, cidade e estado correspondentes.
+E o bot responde com rua, bairro, cidade e estado correspondentes extraídos através da API ViaCEP.
